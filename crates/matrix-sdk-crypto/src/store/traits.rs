@@ -16,7 +16,7 @@ use std::{collections::HashMap, sync::Arc};
 
 use async_trait::async_trait;
 use matrix_sdk_common::{locks::Mutex, AsyncTraitDeps};
-use ruma::{DeviceId, OwnedDeviceId, RoomId, TransactionId, UserId};
+use ruma::{DeviceId, OwnedDeviceId, OwnedUserId, RoomId, TransactionId, UserId};
 
 use super::{BackupKeys, Changes, Result, RoomKeyCounts};
 use crate::{
@@ -174,6 +174,12 @@ pub trait CryptoStore: AsyncTraitDeps {
     /// * `request_id` - The unique request id that identifies this outgoing key
     /// request.
     async fn delete_outgoing_secret_requests(&self, request_id: &TransactionId) -> Result<()>;
+
+    /// Remembers when a no_olm withheld message was already sent to avoid doing
+    /// it again.
+    /// Help: Using user/device as key here because it's sent in clear, but
+    /// should we use the sender_key?
+    async fn is_no_olm_sent(&self, user_id: OwnedUserId, device_id: OwnedDeviceId) -> Result<bool>;
 }
 
 /// A type that can be type-erased into `Arc<dyn CryptoStore>`.
