@@ -17,6 +17,7 @@ uniffi = { workspace = true, features = ["build"] }
 
 [dependencies]
 anyhow = { workspace = true }
+async-rx = { workspace = true }
 base64 = "0.21"
 extension-trait = "1.0.1"
 futures-core = "0.3.17"

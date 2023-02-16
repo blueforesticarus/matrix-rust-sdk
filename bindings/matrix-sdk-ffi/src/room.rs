@@ -4,7 +4,7 @@ use std::{
 };
 
 use anyhow::{bail, Context, Result};
-use futures_signals::signal_vec::SignalVecExt;
+use futures_util::StreamExt;
 use matrix_sdk::{
     room::{timeline::Timeline, Receipts, Room as SdkRoom},
     ruma::{
@@ -241,7 +241,7 @@ impl Room {
     }
 
     pub fn add_timeline_listener(&self, listener: Box<dyn TimelineListener>) {
-        let timeline_signal = self
+        let timeline = self
             .timeline
             .write()
             .unwrap()
@@ -250,20 +250,24 @@ impl Room {
                 let timeline = RUNTIME.block_on(async move { room.timeline().await });
                 Arc::new(timeline)
             })
-            .signal();
+            .clone();
 
-        let listener: Arc<dyn TimelineListener> = listener.into();
-        RUNTIME.spawn(timeline_signal.for_each(move |diff| {
-            let listener = listener.clone();
-            let fut = RUNTIME
-                .spawn_blocking(move || listener.on_update(Arc::new(TimelineDiff::new(diff))));
+        RUNTIME.block_on(async move {
+            let timeline_signal = timeline.stream().await;
 
-            async move {
-                if let Err(e) = fut.await {
-                    error!("Timeline listener error: {e}");
+            let listener: Arc<dyn TimelineListener> = listener.into();
+            RUNTIME.spawn(timeline_signal.for_each(move |diff| {
+                let listener = listener.clone();
+                let fut = RUNTIME
+                    .spawn_blocking(move || listener.on_update(Arc::new(TimelineDiff::new(diff))));
+
+                async move {
+                    if let Err(e) = fut.await {
+                        error!("Timeline listener error: {e}");
+                    }
                 }
-            }
-        }));
+            }));
+        });
     }
 
     pub fn paginate_backwards(&self, opts: PaginationOptions) -> Result<()> {

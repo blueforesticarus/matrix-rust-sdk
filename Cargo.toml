@@ -21,6 +21,7 @@ rust-version = "1.65"
 
 [workspace.dependencies]
 anyhow = "1.0.68"
+async-rx = { git = "https://github.com/jplatte/async-rx", rev = "38cfc33f97247af6b3fb74246342e8afce932a37" }
 async-stream = "0.3.3"
 async-trait = "0.1.60"
 base64 = "0.21.0"

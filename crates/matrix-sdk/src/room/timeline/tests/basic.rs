@@ -1,5 +1,5 @@
 use assert_matches::assert_matches;
-use futures_signals::signal_vec::VecDiff;
+use async_rx::VectorDiff;
 use futures_util::StreamExt;
 use matrix_sdk_base::deserialized_responses::SyncTimelineEvent;
 use matrix_sdk_test::async_test;
@@ -47,9 +47,9 @@ async fn initial_events() {
         ])
         .await;
 
-    let mut stream = timeline.stream();
+    let mut stream = timeline.stream().await;
 
-    let items = assert_matches!(stream.next().await, Some(VecDiff::Replace { values }) => values);
+    let items = assert_matches!(stream.next().await, Some(VectorDiff::Append { values }) => values);
     assert_eq!(items.len(), 3);
     assert_matches!(items[0].as_virtual().unwrap(), VirtualTimelineItem::DayDivider { .. });
     assert_eq!(items[1].as_event().unwrap().sender(), *ALICE);
@@ -59,11 +59,12 @@ async fn initial_events() {
 #[async_test]
 async fn reaction_redaction() {
     let timeline = TestTimeline::new();
-    let mut stream = timeline.stream();
+    let mut stream = timeline.stream().await;
 
     timeline.handle_live_message_event(&ALICE, RoomMessageEventContent::text_plain("hi!")).await;
-    let _day_divider = assert_matches!(stream.next().await, Some(VecDiff::Push { value }) => value);
-    let item = assert_matches!(stream.next().await, Some(VecDiff::Push { value }) => value);
+    let _day_divider =
+        assert_matches!(stream.next().await, Some(VectorDiff::PushBack { value }) => value);
+    let item = assert_matches!(stream.next().await, Some(VectorDiff::PushBack { value }) => value);
     let event = item.as_event().unwrap().as_remote().unwrap();
     assert_eq!(event.reactions().len(), 0);
 
@@ -72,7 +73,7 @@ async fn reaction_redaction() {
     let rel = Annotation::new(msg_event_id.to_owned(), "+1".to_owned());
     timeline.handle_live_message_event(&BOB, ReactionEventContent::new(rel)).await;
     let item =
-        assert_matches!(stream.next().await, Some(VecDiff::UpdateAt { index: 1, value }) => value);
+        assert_matches!(stream.next().await, Some(VectorDiff::Set { index: 1, value }) => value);
     let event = item.as_event().unwrap().as_remote().unwrap();
     assert_eq!(event.reactions().len(), 1);
 
@@ -82,7 +83,7 @@ async fn reaction_redaction() {
 
     timeline.handle_live_redaction(&BOB, reaction_event_id).await;
     let item =
-        assert_matches!(stream.next().await, Some(VecDiff::UpdateAt { index: 1, value }) => value);
+        assert_matches!(stream.next().await, Some(VectorDiff::Set { index: 1, value }) => value);
     let event = item.as_event().unwrap().as_remote().unwrap();
     assert_eq!(event.reactions().len(), 0);
 }
@@ -90,13 +91,14 @@ async fn reaction_redaction() {
 #[async_test]
 async fn edit_redacted() {
     let timeline = TestTimeline::new();
-    let mut stream = timeline.stream();
+    let mut stream = timeline.stream().await;
 
     timeline
         .handle_live_redacted_message_event(*ALICE, RedactedRoomMessageEventContent::new())
         .await;
-    let _day_divider = assert_matches!(stream.next().await, Some(VecDiff::Push { value }) => value);
-    let item = assert_matches!(stream.next().await, Some(VecDiff::Push { value }) => value);
+    let _day_divider =
+        assert_matches!(stream.next().await, Some(VectorDiff::PushBack { value }) => value);
+    let item = assert_matches!(stream.next().await, Some(VectorDiff::PushBack { value }) => value);
 
     let redacted_event_id = item.as_event().unwrap().event_id().unwrap();
 
@@ -108,13 +110,13 @@ async fn edit_redacted() {
     });
     timeline.handle_live_message_event(&ALICE, edit).await;
 
-    assert_eq!(timeline.inner.items().len(), 2);
+    assert_eq!(timeline.inner.items().await.len(), 2);
 }
 
 #[async_test]
 async fn sticker() {
     let timeline = TestTimeline::new();
-    let mut stream = timeline.stream();
+    let mut stream = timeline.stream().await;
 
     timeline
         .handle_live_custom_event(json!({
@@ -135,16 +137,17 @@ async fn sticker() {
         }))
         .await;
 
-    let _day_divider = assert_matches!(stream.next().await, Some(VecDiff::Push { value }) => value);
+    let _day_divider =
+        assert_matches!(stream.next().await, Some(VectorDiff::PushBack { value }) => value);
 
-    let item = assert_matches!(stream.next().await, Some(VecDiff::Push { value }) => value);
+    let item = assert_matches!(stream.next().await, Some(VectorDiff::PushBack { value }) => value);
     assert_matches!(item.as_event().unwrap().content(), TimelineItemContent::Sticker(_));
 }
 
 #[async_test]
 async fn room_member() {
     let timeline = TestTimeline::new();
-    let mut stream = timeline.stream();
+    let mut stream = timeline.stream().await;
 
     let mut first_room_member_content = RoomMemberEventContent::new(MembershipState::Invite);
     first_room_member_content.displayname = Some("Alice".to_owned());
@@ -157,9 +160,10 @@ async fn room_member() {
         )
         .await;
 
-    let _day_divider = assert_matches!(stream.next().await, Some(VecDiff::Push { value }) => value);
+    let _day_divider =
+        assert_matches!(stream.next().await, Some(VectorDiff::PushBack { value }) => value);
 
-    let item = assert_matches!(stream.next().await, Some(VecDiff::Push { value }) => value);
+    let item = assert_matches!(stream.next().await, Some(VectorDiff::PushBack { value }) => value);
     let membership = assert_matches!(item.as_event().unwrap().content(), TimelineItemContent::MembershipChange(ev) => ev);
     assert_matches!(membership.content(), FullStateEventContent::Original { .. });
     assert_matches!(membership.change(), Some(MembershipChange::Invited));
@@ -175,7 +179,7 @@ async fn room_member() {
         )
         .await;
 
-    let item = assert_matches!(stream.next().await, Some(VecDiff::Push { value }) => value);
+    let item = assert_matches!(stream.next().await, Some(VectorDiff::PushBack { value }) => value);
     let membership = assert_matches!(item.as_event().unwrap().content(), TimelineItemContent::MembershipChange(ev) => ev);
     assert_matches!(membership.content(), FullStateEventContent::Original { .. });
     assert_matches!(membership.change(), Some(MembershipChange::InvitationAccepted));
@@ -191,7 +195,7 @@ async fn room_member() {
         )
         .await;
 
-    let item = assert_matches!(stream.next().await, Some(VecDiff::Push { value }) => value);
+    let item = assert_matches!(stream.next().await, Some(VectorDiff::PushBack { value }) => value);
     let profile = assert_matches!(item.as_event().unwrap().content(), TimelineItemContent::ProfileChange(ev) => ev);
     assert_matches!(profile.displayname_change(), Some(_));
     assert_matches!(profile.avatar_url_change(), None);
@@ -204,7 +208,7 @@ async fn room_member() {
         )
         .await;
 
-    let item = assert_matches!(stream.next().await, Some(VecDiff::Push { value }) => value);
+    let item = assert_matches!(stream.next().await, Some(VectorDiff::PushBack { value }) => value);
     let membership = assert_matches!(item.as_event().unwrap().content(), TimelineItemContent::MembershipChange(ev) => ev);
     assert_matches!(membership.content(), FullStateEventContent::Redacted(_));
     assert_matches!(membership.change(), None);
@@ -213,7 +217,7 @@ async fn room_member() {
 #[async_test]
 async fn other_state() {
     let timeline = TestTimeline::new();
-    let mut stream = timeline.stream();
+    let mut stream = timeline.stream().await;
 
     timeline
         .handle_live_state_event(
@@ -223,9 +227,10 @@ async fn other_state() {
         )
         .await;
 
-    let _day_divider = assert_matches!(stream.next().await, Some(VecDiff::Push { value }) => value);
+    let _day_divider =
+        assert_matches!(stream.next().await, Some(VectorDiff::PushBack { value }) => value);
 
-    let item = assert_matches!(stream.next().await, Some(VecDiff::Push { value }) => value);
+    let item = assert_matches!(stream.next().await, Some(VectorDiff::PushBack { value }) => value);
     let ev = assert_matches!(item.as_event().unwrap().content(), TimelineItemContent::OtherState(ev) => ev);
     let full_content =
         assert_matches!(ev.content(), AnyOtherFullStateEventContent::RoomName(c) => c);
@@ -235,7 +240,7 @@ async fn other_state() {
 
     timeline.handle_live_redacted_state_event(&ALICE, RedactedRoomTopicEventContent::new()).await;
 
-    let item = assert_matches!(stream.next().await, Some(VecDiff::Push { value }) => value);
+    let item = assert_matches!(stream.next().await, Some(VectorDiff::PushBack { value }) => value);
     let ev = assert_matches!(item.as_event().unwrap().content(), TimelineItemContent::OtherState(ev) => ev);
     let full_content =
         assert_matches!(ev.content(), AnyOtherFullStateEventContent::RoomTopic(c) => c);
@@ -250,7 +255,7 @@ async fn dedup_pagination() {
     timeline.handle_live_custom_event(event.clone()).await;
     timeline.handle_back_paginated_custom_event(event).await;
 
-    let timeline_items = timeline.inner.items();
+    let timeline_items = timeline.inner.items().await;
     assert_eq!(timeline_items.len(), 2);
     assert_matches!(*timeline_items[0], TimelineItem::Virtual(VirtualTimelineItem::DayDivider(_)));
     assert_matches!(*timeline_items[1], TimelineItem::Event(_));
@@ -269,7 +274,7 @@ async fn dedup_initial() {
 
     timeline.inner.add_initial_events(vec![event_a.clone(), event_b, event_a]).await;
 
-    let timeline_items = timeline.inner.items();
+    let timeline_items = timeline.inner.items().await;
     assert_eq!(timeline_items.len(), 3);
     assert_eq!(timeline_items[1].as_event().unwrap().sender(), *BOB);
     assert_eq!(timeline_items[2].as_event().unwrap().sender(), *ALICE);

@@ -10,6 +10,7 @@ file-logging = ["dep:log4rs"]
 
 [dependencies]
 app_dirs2 = "2"
+async-rx = { workspace = true }
 chrono = "0.4.23"
 clap = { version = "4.0.29", features = ["derive", "env"] }
 dialoguer = "0.10.2"

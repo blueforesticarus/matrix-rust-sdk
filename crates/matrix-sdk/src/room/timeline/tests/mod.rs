@@ -19,9 +19,9 @@ use std::sync::{
     Arc,
 };
 
+use async_rx::VectorDiff;
 use async_trait::async_trait;
 use futures_core::Stream;
-use futures_signals::signal_vec::{SignalVecExt, VecDiff};
 use matrix_sdk_base::deserialized_responses::TimelineEvent;
 use once_cell::sync::Lazy;
 use ruma::{
@@ -57,8 +57,8 @@ impl TestTimeline {
         Self { inner: TimelineInner::new(TestProfileProvider), next_ts: AtomicU64::new(0) }
     }
 
-    fn stream(&self) -> impl Stream<Item = VecDiff<Arc<TimelineItem>>> {
-        self.inner.items_signal().to_stream()
+    async fn stream(&self) -> impl Stream<Item = VectorDiff<Arc<TimelineItem>>> {
+        self.inner.items_stream().await
     }
 
     async fn handle_live_message_event<C>(&self, sender: &UserId, content: C)

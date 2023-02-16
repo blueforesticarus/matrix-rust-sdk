@@ -289,9 +289,7 @@ callback interface TimelineListener {
     void on_update(TimelineDiff update);
 };
 
-interface TimelineDiff {
-    MoveData? move();
-};
+interface TimelineDiff {};
 
 dictionary MoveData {
     u32 old_index;

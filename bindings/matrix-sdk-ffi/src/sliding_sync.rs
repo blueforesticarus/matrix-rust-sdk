@@ -201,23 +201,29 @@ impl SlidingSyncRoom {
                 timeline_lock.insert(Arc::new(timeline))
             }
         };
-        let timeline_signal = timeline.signal();
 
-        let listener: Arc<dyn TimelineListener> = listener.into();
-        let handle_events = timeline_signal.for_each(move |diff| {
-            let listener = listener.clone();
-            let fut = RUNTIME
-                .spawn_blocking(move || listener.on_update(Arc::new(TimelineDiff::new(diff))));
+        let timeline_clone = timeline.to_owned();
+        let handle_events = async move {
+            let timeline_stream = timeline_clone.stream().await;
+            let listener: Arc<dyn TimelineListener> = listener.into();
+            timeline_stream
+                .for_each(move |diff| {
+                    let listener = listener.clone();
+                    let fut = RUNTIME.spawn_blocking(move || {
+                        listener.on_update(Arc::new(TimelineDiff::new(diff)))
+                    });
 
-            async move {
-                if let Err(e) = fut.await {
-                    error!("Timeline listener error: {e}");
-                }
-            }
-        });
+                    async move {
+                        if let Err(e) = fut.await {
+                            error!("Timeline listener error: {e}");
+                        }
+                    }
+                })
+                .await;
+        };
 
         let mut reset_broadcast_rx = self.client.sliding_sync_reset_broadcast_tx.subscribe();
-        let timeline = timeline.clone();
+        let timeline = timeline.to_owned();
         let handle_sliding_sync_reset = async move {
             loop {
                 match reset_broadcast_rx.recv().await {
