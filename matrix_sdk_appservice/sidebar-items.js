@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Error"],"mod":["event_handler","registration","user"],"struct":["AppService","AppServiceBuilder","AppServiceRouter"],"type":["Result"]};

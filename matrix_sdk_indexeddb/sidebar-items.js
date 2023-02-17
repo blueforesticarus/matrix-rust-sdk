@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["IndexeddbCryptoStoreError","IndexeddbStateStoreError","MigrationConflictStrategy","OpenStoreError"],"fn":["make_store_config"],"struct":["IndexeddbCryptoStore","IndexeddbStateStore","IndexeddbStateStoreBuilder"]};

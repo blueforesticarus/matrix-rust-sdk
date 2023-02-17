@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ManualVerifyError","RequestVerificationError"],"struct":["Device","MasterPubkey","UserDevices","UserIdentity"]};

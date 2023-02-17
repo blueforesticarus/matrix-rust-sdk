@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["AppServiceRegistration","NamespaceCache"],"type":["Host","Port"]};

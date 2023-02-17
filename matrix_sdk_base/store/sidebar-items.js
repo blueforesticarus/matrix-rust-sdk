@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["StoreEncryptionError","StoreError"],"struct":["MemoryStore","StateChanges","StoreConfig"],"trait":["IntoStateStore","StateStore","StateStoreExt"],"type":["BoxStream","Result"]};

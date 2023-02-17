@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["AttachmentInfo"],"fn":["generate_image_thumbnail"],"struct":["AttachmentConfig","BaseAudioInfo","BaseFileInfo","BaseImageInfo","BaseThumbnailInfo","BaseVideoInfo","Thumbnail"]};

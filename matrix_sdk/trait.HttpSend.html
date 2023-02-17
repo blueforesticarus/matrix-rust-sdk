@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Abstraction around the http layer. The allows implementors to use different http libraries."><title>HttpSend in matrix_sdk - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-1def573a4779b29b.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../static.files/light-d59023bfa12059d2.css"><link rel="stylesheet" disabled href="../static.files/dark-1ca41bb1e10af075.css"><link rel="stylesheet" disabled href="../static.files/ayu-18b4181a2f3fb862.css"><script src="../static.files/storage-3891ce972e3a2bf8.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-98a684e84ae5b08b.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../matrix_sdk/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../matrix_sdk/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2 class="location"><a href="#">HttpSend</a></h2><div class="sidebar-elems"><section><h3><a href="#required-methods">Required Methods</a></h3><ul class="block"><li><a href="#tymethod.send_request">send_request</a></li></ul><h3><a href="#foreign-impls">Implementations on Foreign Types</a></h3><ul class="block"><li><a href="#impl-HttpSend-for-Client">Client</a></li></ul><h3><a href="#implementors">Implementors</a></h3></section><h2><a href="index.html">In matrix_sdk</a></h2></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Trait <a href="index.html">matrix_sdk</a>::<wbr><a class="trait" href="#">HttpSend</a><button id="copy-path" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../src/matrix_sdk/http_client.rs.html#47-102">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><pre class="rust item-decl"><code>pub trait HttpSend: <a class="trait" href="trait.AsyncTraitDeps.html" title="trait matrix_sdk::AsyncTraitDeps">AsyncTraitDeps</a> {
+    // Required method
+    fn <a href="#tymethod.send_request" class="fn">send_request</a>&lt;'life0, 'async_trait&gt;(
+        &amp;'life0 self,
+        request: <a class="struct" href="https://docs.rs/http/0.2.8/http/request/struct.Request.html" title="struct http::request::Request">Request</a>&lt;<a class="struct" href="https://docs.rs/bytes/1.4.0/bytes/bytes/struct.Bytes.html" title="struct bytes::bytes::Bytes">Bytes</a>&gt;,
+        timeout: <a class="struct" href="instant/struct.Duration.html" title="struct matrix_sdk::instant::Duration">Duration</a>
+    ) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/nightly/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://docs.rs/http/0.2.8/http/response/struct.Response.html" title="struct http::response::Response">Response</a>&lt;<a class="struct" href="https://docs.rs/bytes/1.4.0/bytes/bytes/struct.Bytes.html" title="struct bytes::bytes::Bytes">Bytes</a>&gt;, <a class="enum" href="enum.HttpError.html" title="enum matrix_sdk::HttpError">HttpError</a>&gt;&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'async_trait&gt;&gt;
+       <span class="where">where Self: 'async_trait,
+             'life0: 'async_trait</span>;
+}</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Abstraction around the http layer. The allows implementors to use different
+http libraries.</p>
+</div></details><h2 id="required-methods" class="small-section-header">Required Methods<a href="#required-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="tymethod.send_request" class="method"><a class="srclink rightside" href="../src/matrix_sdk/http_client.rs.html#97-101">source</a><h4 class="code-header">fn <a href="#tymethod.send_request" class="fn">send_request</a>&lt;'life0, 'async_trait&gt;(
+    &amp;'life0 self,
+    request: <a class="struct" href="https://docs.rs/http/0.2.8/http/request/struct.Request.html" title="struct http::request::Request">Request</a>&lt;<a class="struct" href="https://docs.rs/bytes/1.4.0/bytes/bytes/struct.Bytes.html" title="struct bytes::bytes::Bytes">Bytes</a>&gt;,
+    timeout: <a class="struct" href="instant/struct.Duration.html" title="struct matrix_sdk::instant::Duration">Duration</a>
+) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/nightly/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://docs.rs/http/0.2.8/http/response/struct.Response.html" title="struct http::response::Response">Response</a>&lt;<a class="struct" href="https://docs.rs/bytes/1.4.0/bytes/bytes/struct.Bytes.html" title="struct bytes::bytes::Bytes">Bytes</a>&gt;, <a class="enum" href="enum.HttpError.html" title="enum matrix_sdk::HttpError">HttpError</a>&gt;&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'async_trait&gt;&gt;<span class="where fmt-newline">where
+    Self: 'async_trait,
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>The method abstracting sending request types and receiving response
+types.</p>
+<p>This is called by the client every time it wants to send anything to a
+homeserver.</p>
+<h5 id="arguments"><a href="#arguments">Arguments</a></h5>
+<ul>
+<li>
+<p><code>request</code> - The http request that has been converted from a ruma
+<code>Request</code>.</p>
+</li>
+<li>
+<p><code>timeout</code> - A timeout for the full request &gt; response cycle.</p>
+</li>
+</ul>
+<h5 id="examples"><a href="#examples">Examples</a></h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::time::Duration;
+
+<span class="kw">use </span>matrix_sdk::{async_trait, bytes::Bytes, HttpError, HttpSend};
+
+<span class="attr">#[derive(Debug)]
+</span><span class="kw">struct </span>Client(reqwest::Client);
+
+<span class="kw">impl </span>Client {
+    <span class="kw">async fn </span>response_to_http_response(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="kw-2">mut </span>response: reqwest::Response,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;http::Response&lt;Bytes&gt;, HttpError&gt; {
+        <span class="comment">// Convert the reqwest response to a http one.
+        </span><span class="macro">todo!</span>()
+    }
+}
+
+<span class="attr">#[async_trait]
+</span><span class="kw">impl </span>HttpSend <span class="kw">for </span>Client {
+    <span class="kw">async fn </span>send_request(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        request: http::Request&lt;Bytes&gt;,
+        timeout: Duration,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;http::Response&lt;Bytes&gt;, HttpError&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self
+            </span>.response_to_http_response(
+                <span class="self">self</span>.<span class="number">0
+                    </span>.execute(reqwest::Request::try_from(request)<span class="question-mark">?</span>)
+                    .<span class="kw">await</span><span class="question-mark">?</span>,
+            )
+            .<span class="kw">await</span><span class="question-mark">?</span>)
+    }
+}</code></pre></div>
+</div></details></div><h2 id="foreign-impls" class="small-section-header">Implementations on Foreign Types<a href="#foreign-impls" class="anchor">§</a></h2><details class="toggle implementors-toggle"><summary><section id="impl-HttpSend-for-Client" class="impl"><a class="srclink rightside" href="../src/matrix_sdk/http_client.rs.html#444-463">source</a><a href="#impl-HttpSend-for-Client" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.HttpSend.html" title="trait matrix_sdk::HttpSend">HttpSend</a> for <a class="struct" href="https://docs.rs/reqwest/0.11.13/reqwest/async_impl/client/struct.Client.html" title="struct reqwest::async_impl::client::Client">Client</a></h3></section></summary><div class="impl-items"><section id="method.send_request" class="method trait-impl"><a class="srclink rightside" href="../src/matrix_sdk/http_client.rs.html#445-462">source</a><a href="#method.send_request" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.send_request" class="fn">send_request</a>&lt;'life0, 'async_trait&gt;(
+    &amp;'life0 self,
+    request: <a class="struct" href="https://docs.rs/http/0.2.8/http/request/struct.Request.html" title="struct http::request::Request">Request</a>&lt;<a class="struct" href="https://docs.rs/bytes/1.4.0/bytes/bytes/struct.Bytes.html" title="struct bytes::bytes::Bytes">Bytes</a>&gt;,
+    _timeout: <a class="struct" href="instant/struct.Duration.html" title="struct matrix_sdk::instant::Duration">Duration</a>
+) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/nightly/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://docs.rs/http/0.2.8/http/response/struct.Response.html" title="struct http::response::Response">Response</a>&lt;<a class="struct" href="https://docs.rs/bytes/1.4.0/bytes/bytes/struct.Bytes.html" title="struct bytes::bytes::Bytes">Bytes</a>&gt;, <a class="enum" href="enum.HttpError.html" title="enum matrix_sdk::HttpError">HttpError</a>&gt;&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'async_trait&gt;&gt;<span class="where fmt-newline">where
+    Self: 'async_trait,
+    'life0: 'async_trait,</span></h4></section></div></details><h2 id="implementors" class="small-section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"></div><script src="../implementors/matrix_sdk/http_client/trait.HttpSend.js" data-ignore-extern-crates="reqwest" async></script></section></div></main><div id="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="matrix_sdk" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0-nightly (9a7cc6c32 2023-02-16)" data-search-js="search-14421e1532aead08.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Generate a thumbnail for an image."><title>generate_image_thumbnail in matrix_sdk::attachment - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-1def573a4779b29b.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-d59023bfa12059d2.css"><link rel="stylesheet" disabled href="../../static.files/dark-1ca41bb1e10af075.css"><link rel="stylesheet" disabled href="../../static.files/ayu-18b4181a2f3fb862.css"><script src="../../static.files/storage-3891ce972e3a2bf8.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-98a684e84ae5b08b.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc fn"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../../matrix_sdk/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../../matrix_sdk/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><div class="sidebar-elems"><h2><a href="index.html">In matrix_sdk::attachment</a></h2></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Function <a href="../index.html">matrix_sdk</a>::<wbr><a href="index.html">attachment</a>::<wbr><a class="fn" href="#">generate_image_thumbnail</a><button id="copy-path" title="Copy item path to clipboard"><img src="../../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../../src/matrix_sdk/attachment.rs.html#337-375">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><pre class="rust item-decl"><code>pub fn generate_image_thumbnail&lt;R: <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html" title="trait std::io::BufRead">BufRead</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Seek.html" title="trait std::io::Seek">Seek</a>&gt;(
+    content_type: &amp;<a class="struct" href="https://docs.rs/mime/0.3.16/mime/struct.Mime.html" title="struct mime::Mime">Mime</a>,
+    reader: R,
+    size: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;(<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>)&gt;
+) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;, <a class="struct" href="struct.BaseThumbnailInfo.html" title="struct matrix_sdk::attachment::BaseThumbnailInfo">BaseThumbnailInfo</a>), <a class="enum" href="../enum.ImageError.html" title="enum matrix_sdk::ImageError">ImageError</a>&gt;</code></pre><span class="item-info"><div class="stab portability">Available on <strong>crate feature <code>image-proc</code></strong> only.</div></span><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Generate a thumbnail for an image.</p>
+<p>This is a convenience method that uses the
+<a href="https://github.com/image-rs/image">image</a> crate.</p>
+<h2 id="arguments"><a href="#arguments">Arguments</a></h2>
+<ul>
+<li>
+<p><code>content_type</code> - The type of the media, this will be used as the
+content-type header.</p>
+</li>
+<li>
+<p><code>reader</code> - A <code>Reader</code> that will be used to fetch the raw bytes of the
+media.</p>
+</li>
+<li>
+<p><code>size</code> - The size of the thumbnail in pixels as a <code>(width, height)</code> tuple.
+If set to <code>None</code>, defaults to <code>(800, 600)</code>.</p>
+</li>
+</ul>
+<h2 id="examples"><a href="#examples">Examples</a></h2>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>path = PathBuf::from(<span class="string">&quot;/home/example/my-cat.jpg&quot;</span>);
+<span class="kw">let </span><span class="kw-2">mut </span>image = BufReader::new(File::open(path)<span class="question-mark">?</span>);
+
+<span class="kw">let </span>(thumbnail_data, thumbnail_info) = generate_image_thumbnail(
+    <span class="kw-2">&amp;</span>mime::IMAGE_JPEG,
+    <span class="kw-2">&amp;mut </span>image,
+    <span class="prelude-val">None
+</span>)<span class="question-mark">?</span>;
+<span class="kw">let </span><span class="kw-2">mut </span>cursor = Cursor::new(thumbnail_data);
+<span class="kw">let </span>config = AttachmentConfig::with_thumbnail(Thumbnail {
+    reader: <span class="kw-2">&amp;mut </span>cursor,
+    content_type: <span class="kw-2">&amp;</span>mime::IMAGE_JPEG,
+    info: <span class="prelude-val">Some</span>(thumbnail_info),
+});
+
+image.rewind()<span class="question-mark">?</span>;
+
+<span class="kw">if let </span><span class="prelude-val">Some</span>(room) = client.get_joined_room(<span class="kw-2">&amp;</span>room_id) {
+    room.send_attachment(
+        <span class="string">&quot;My favorite cat&quot;</span>,
+        <span class="kw-2">&amp;</span>mime::IMAGE_JPEG,
+        <span class="kw-2">&amp;mut </span>image,
+        config,
+    ).<span class="kw">await</span><span class="question-mark">?</span>;
+}</code></pre></div>
+</div></details></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="matrix_sdk" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0-nightly (9a7cc6c32 2023-02-16)" data-search-js="search-14421e1532aead08.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>
